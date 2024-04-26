@@ -1,0 +1,109 @@
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userprefs
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.sdf
+*.opensdf
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet packages
+*.nuget/
+packages/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Build results of an ATL Project
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# TeamCity
+_TeamCity*
+
+# DotCover
+*.dotCover
+
+# NDepend
+[Nn]Depend.*
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Chutzpah Test files
+_Chutzpah*
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.suo
+*.vc.db
+*.vcproj.*.user
+*.vcxproj.*.user
+*.vcxproj.filters
+*.vcxproj.*.users
+*.vcxproj.*.vcproj
+*.vcxproj.*.vcxproj.*
+*.VC.db
+*.VC.VC.opendb
+
+# Test files
+*.testsettings
+*.testrunconfig
+*.trx
+*.vsmdi
+*.loadtest
+*.fakes
