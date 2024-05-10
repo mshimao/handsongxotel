@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+EXPOSE 8080
 WORKDIR /app
 
 USER app
@@ -20,12 +21,19 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ADD otel-dotnet-auto /app/.otel-dotnet-auto
+# ADD otel-dotnet-auto /app/.otel-dotnet-auto
 USER root
-RUN chmod +x /app/.otel-dotnet-auto
+
+
+# RUN chmod +x /app/.otel-dotnet-auto
+RUN apt-get update && apt-get install -y curl
+RUN apt-get install -y unzip
+
+RUN curl -L -O https://github.com/open-telemetry/opentelemetry-dotnet-instrumentation/releases/latest/download/otel-dotnet-auto-install.sh
+RUN chmod +x ./otel-dotnet-auto-install.sh
+RUN ./otel-dotnet-auto-install.sh
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-USER $APP_UID 
 
 ENTRYPOINT ["/entrypoint.sh"]
