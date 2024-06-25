@@ -48,9 +48,7 @@ Para armazenar as informações dos logs, traces e métricas são utilizados "Ba
 
 ### Arquitetura da solução
 
-O Grafana Cloud nos provê os serviços do Grafana, Loki, Tempo e Prometheus, sendo que não é necessário a instalação e configuração desses softwares.
-O coletor OpenTelemetry também é open source, este elemento geralmente é instalado próximo a aplicação que está sendo monitorada.
-Como esses softwares são open source, é possível a instalação deles num ambiente on premise ou na nuvem.
+Utilizaremos o Docker Compose para executar os serviços do Grafana, coletor OpenTelemetry, Loki, Tempo e Prometheus, sendo que não é necessário a instalação e configuração desses softwares.
 
 O diagrama abaixo apresenta a arquitetura dos componentes:
 

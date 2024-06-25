@@ -1,0 +1,68 @@
+extensions:
+  health_check:
+  zpages:
+    endpoint: :55679
+
+receivers:
+  otlp:
+    protocols:
+        grpc:          
+        http:          
+
+processors:   
+  resource:
+    attributes:
+    - action: insert
+      key: loki.format
+      value: json
+    - action: insert 
+      key: service_name 
+      value: AppGXDotNet
+    - action: insert 
+      key: service_namespace 
+      value: Handson    
+    - action: insert 
+      key: loki.resource.labels 
+      value: service_name,service_namespace 
+
+exporters:
+  otlp:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+    tls:
+      insecure: true
+
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    metrics:
+      receivers:
+        - otlp
+      exporters:
+        - prometheusremotewrite
+    traces:
+      receivers: [otlp]
+      exporters: 
+        - otlp        
+    logs:
+      receivers: 
+        - otlp   
+      exporters:
+        - loki
+  telemetry:
+    logs:
+      level: debug
+  extensions:
+    - health_check
+    - zpages
+
+

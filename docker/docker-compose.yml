@@ -1,0 +1,84 @@
+version: "2"
+services:
+   # Collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.87.0
+    command: ["--config=/etc/otel-collector-config.yaml", ""]
+    volumes:
+      - ./collector.yaml:/etc/otel-collector-config.yaml          
+      - ./log:/log/otel 
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP Http receiver
+    depends_on:
+      - tempo
+      - prometheus
+      - loki
+
+  genexusapp:
+    build: 
+      context: /Deploy/DOCKER/context
+    container_name: opentelemetrygx   
+          
+    environment:
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=Handson,service.name=AppGXDotNet,service.version=1.0.0
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - GX_LOG_LEVEL=debug
+      - GX_CONNECTION-DEFAULT-DB=HandsOnOtel
+      - GX_CONNECTION-DEFAULT-DATASOURCE=host.docker.internal
+      - GX_CONNECTION-DEFAULT-USER=sa
+      - GX_CONNECTION-DEFAULT-PASSWORD=sa
+      - GX_CONNECTION-DEFAULT-PORT=1433
+      - ASPNETCORE_URLS=http://*:8080
+
+    ports:
+      - "9999:8080"
+
+  loki:
+    image: grafana/loki:2.7.4
+    volumes:
+      - ./loki-data:/tmp/loki
+      - ./loki-config.yaml:/etc/loki/loki-config.yaml
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yaml
+
+  prometheus:
+    image: prom/prometheus:v2.42.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-data:/prometheus
+    ports:
+      - "9091:9090"
+    command: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.enable-remote-write-receiver
+
+  tempo:
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+      - ./tempo-data:/tmp/tempo
+    ports:      
+      - "3200"   # tempo
+      - "4317"  # otlp grpc
+      - "4318"  # otlp http
+      
+
+  grafana:
+    image: grafana/grafana:9.4.3
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - otel-collector
+
+
+  
